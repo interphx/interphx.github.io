@@ -1,0 +1,339 @@
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="description" content="Draw using code and equations!">
+        <title>RGBMath</title>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                font-family: Verdana, Tahoma, sans-serif;
+            }
+            .main {
+                width: 70%;
+                margin: 0 auto;
+            }
+            .display-area {
+                margin: 0.5em auto;
+                text-align: center;
+            }
+            .display-area #display {
+                margin: 0 auto;
+            }
+            .controls {
+                overflow: auto;
+            }
+            .example-loader {
+                float: right;
+            }
+            .control-buttons {
+                float: left;
+            }
+            .code {
+                width: 100%;
+            }
+            .code #code {
+                width: 100%;
+                height: 10em;
+            }
+            .debug {
+                width: 100%;
+                margin: 0.5em 0;
+            }
+            .debug__item {
+                padding: 0.25em;
+                margin-bottom: 0.25em;
+            }
+            .debug__error {
+                background: #FFAAAA;
+            }
+            .debug__success {
+                background: #AAFFAA;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main">
+            <div class="display-area">
+                <canvas id="display" width="800" height="600">
+                    Sorry, your browser does not support &lt;canvas&gt; tag. Please switch to a modern browser.
+                </canvas>
+            </div>
+            <div class="ui">
+                <div class="controls">
+                    <div class="control-buttons">
+                        <button class="btn" id="btn-erase-code">Стереть код</button>
+                        <button class="btn" id="btn-clear-canvas">Очистить холст</button>
+                        <button class="btn" id="btn-render">Рисовать!</button>
+                        <a href="/docs.html" target="_blank">Документация</a>
+                    </div>
+                    <div class="example-loader">
+                        <select id="example">
+                            <option value="xor-kite" selected="selected">XOR Kite</option>
+                            <option value="ripple">Ripple</option>
+                            <option value="rainbow-plasma">Rainbow Plasma</option>
+                            <option value="prime-circuitry">Prime Circuitry</option>
+                            <option value="pattern-in-blue">Pattern in Blue</option>
+                            <option value="glowing-sineboard">Glowing Sineboard</option>
+                            <option value="eating-holes">Eating Holes</option>
+                            <option value="torn-membrane">Torn Membrane</option>
+                        </select>
+                        <button class="btn" id="btn-load-example">Загрузить пример</button>
+                    </div>
+                </div>
+                <div id="debug" class="debug">
+                </div>
+                <div class="code">
+                    <textarea id="code"><R> = (X / WIDTH) * 255;&#013;&#010;<G> = (Y / HEIGHT) * 255;&#013;&#010;<B> = X ^ Y;</textarea>
+                </div>
+            </div>
+        </div>
+        <script>
+            var EXAMPLES = {
+                'xor-kite': '<R> = (X / WIDTH) * 255;\n<G> = (Y / HEIGHT) * 255;\n<B> = X ^ Y;',
+                'ripple': 'var centerX = WIDTH/2;\nvar centerY = HEIGHT/2;\nvar distX = X - centerX;\nvar distY = Y - centerY;\nvar distToCenter = sqrt(distX*distX + distY*distY);\n\n<R> = 0;\n<G> = 0;\n<B> = remap(sin(distToCenter / 16), -1, 1, 0, 1) * 255;',
+                'rainbow-plasma': '// Based on this article: http://www.bidouille.org/prog/plasma\n\n// Scale down coordinates to make plasma blobs bigger\nX = X / 64;\nY = Y / 64;\n\n// Build nice weird plasma value from sines of coordinates\nvar v = 0;\nv += sin(X);\nv += sin(Y / 2);\nv += sin((X + Y) / 2);\nv += sin(sqrt(X*X + Y*Y + 1));\nv /= 2;\n\n// Each color is a sine of our plasma value.\n// Coefficient 5 scales everYthing down (to make plasma more interesting)\n// Offsets like 2*PI/3 and 4*PI/3 make it colourful instead of monochrome\n<R> = remap(sin(v * 5 * PI), -1, 1, 0, 1) * 255;\n<G> = remap(sin(v * 5 * PI + 2*PI/3), -1, 1, 0, 1) * 255;\n<B> = remap(sin(v * 5 * PI + 4*PI/3), -1, 1, 0, 1) * 255;',
+                'prime-circuitry': '<R> = (isPrime(X ^ Y) + isPrime((X + 1) ^ (Y + 1))) * 128;\n<G> = (isPrime(X ^ Y) * isPrime((X - 2) ^ (Y - 1))) * 255;\n<B> = 0;',
+                'pattern-in-blue': '<R> = 0;\n<G> = 0;\n<B> = sin(X ^ Y) * cos(X ^ Y) * 255;',
+                'glowing-sineboard': 'var sinX = sin(X / 64);\nvar cosY = cos(Y / 64);\n\n<R> = remap((sinX  * cosY), -1, 1, 0, 1) * 255;\n<G> = 0;\n<B> = remap((sinX  % cosY), -2, 2, 0, 1) * 255;',
+                'eating-holes': 'var X = (X / 64);\nvar Y = (Y / 64);\n\n<R> = sin((sin(X) * 128) ^ (sin(Y) * 128)) * 255;\n<G> = 0;\n<B> = 0;',
+                'torn-membrane': 'var X = (X / 64);\nvar Y = (Y / 64);\n\n<R> = 0;\n<G> = 0;\n<B> = sin(acos(pow((sin(X + Y) * cos(X - Y)), 2)) + cos(Y*X) * sin(X)) * 255;'
+            };
+        
+            // PREFIX: _$internal$
+            function evalCode(taskCode, _$internal$imageData) {
+                'use strict';
+                
+                var random2d = function(x, y) {
+                    var value = (Math.sin(x * 12.9898 + y * 78.233) * 43758.5453);
+                    return value - Math.trunc(value);
+                };
+                
+                var remap = function(value, a0, a1, b0, b1) {
+                    return ((value - a0) / (a1 - a0)) * b1 + b0;
+                };
+                
+                var isPrime = function(n) {
+                 if (isNaN(n) || !isFinite(n) || n%1 || n<2) return false; 
+                 if (n==leastFactor(n)) return true;
+                 return false;
+                };
+
+                var leastFactor = function(n){
+                 if (isNaN(n) || !isFinite(n)) return NaN;  
+                 if (n==0) return 0;  
+                 if (n%1 || n*n<2) return 1;
+                 if (n%2==0) return 2;  
+                 if (n%3==0) return 3;  
+                 if (n%5==0) return 5;  
+                 var m = Math.sqrt(n);
+                 for (var i=7;i<=m;i+=30) {
+                  if (n%i==0)      return i;
+                  if (n%(i+4)==0)  return i+4;
+                  if (n%(i+6)==0)  return i+6;
+                  if (n%(i+10)==0) return i+10;
+                  if (n%(i+12)==0) return i+12;
+                  if (n%(i+16)==0) return i+16;
+                  if (n%(i+22)==0) return i+22;
+                  if (n%(i+24)==0) return i+24;
+                 }
+                 return n;
+                };
+                
+                // Expose required symbols
+                var sin = Math.sin,
+                    cos = Math.cos,
+                    tan = Math.tan,
+                    log = Math.log,
+                    log2 = Math.log2,
+                    log10 = Math.log10,
+                    acos = Math.acos,
+                    asin = Math.asin,
+                    atan = Math.atan,
+                    abs = Math.abs,
+                    floor = Math.floor,
+                    ceil = Math.ceil,
+                    trunc = Math.trunc,
+                    round = Math.round,
+                    sqrt = Math.sqrt,
+                    pow = Math.pow,
+                    
+                    PI = Math.PI,
+                    E = Math.E;
+                
+                // Hide globals to protect from kids (not safe against any JavaScript expert!)
+                var window,
+                    Object,
+                    Number,
+                    Boolean,
+                    String,
+                    RegExp,
+                    Error,
+                    JSON,
+                    Date,
+                    performance,
+                    // TODO: Hiding Math breaks stuff, fix it
+                    //Math,
+                    alert,
+                    prompt,
+                    console;
+                
+                return (function() { return eval(taskCode); }).call({});
+            }
+            
+            var global = (function() {
+                var global;
+                try {
+                  global = Function('return this')() || (42, eval)('this');
+                } catch(e) {
+                  global = window;
+                }
+                return global;
+            })();
+            
+            function noop() {}
+            function rethrow(err) { throw err; }
+        
+            function SimpleRenderer(canvas, onComplete, onError) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.imageData = this.ctx.getImageData(0, 0, canvas.width, canvas.height);
+                this.onComplete = onComplete || noop;
+                this.onError = onError || rethrow;
+            };
+            
+            SimpleRenderer.prototype = {
+                constructor: SimpleRenderer,
+                _generateCode: function(code, w, h) {
+                    var start = 
+                        'var WIDTH = ' + w.toString() + ';' +
+                        'var HEIGHT = ' + h.toString() + ';' +
+                        'for (var INDEX = 0; INDEX < ' + (w * h).toString() + '; ++INDEX) {' +
+                        'var _$internal$arrayIndex = INDEX * 4;' +
+                        'var X = INDEX % ' + w + ';' +
+                        'var Y = (INDEX / ' + w + ')|0;';
+                    var end = 
+                        '_$internal$imageData[_$internal$arrayIndex + 3] = 255; }';
+                    return  start +
+                            code
+                                .replace(/\<R\>/g, '_$internal$imageData[_$internal$arrayIndex   ]')
+                                .replace(/\<G\>/g, '_$internal$imageData[_$internal$arrayIndex + 1]')
+                                .replace(/\<B\>/g, '_$internal$imageData[_$internal$arrayIndex + 2]') +
+                            end;
+                },
+                
+                clear: function() {
+                    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                },
+                
+                start: function(code) {
+                    //try {
+                        var generatedCode = this._generateCode(code, this.canvas.width, this.canvas.height);
+                        var result = evalCode(generatedCode, this.imageData.data);
+                        this.ctx.putImageData(this.imageData, 0, 0);
+                        this.onComplete();
+                    //} catch(err) {
+                    //    this.onError(err);
+                    //}
+                },
+                
+                stop: function() {
+                    throw new Error('SimpleRenderer is synchronous and thus unstoppable');
+                }
+            };
+            
+            var debug = (function() {
+                var debugArea = document.getElementById('debug');
+                
+                function clearDebug() {
+                    debugArea.innerHTML = '';
+                }
+                
+                function addError(text) {
+                    div = document.createElement('div');
+                    div.className = 'debug__item debug__error';
+                    div.textContent = text;
+                    debugArea.appendChild(div);
+                }
+                
+                function addSuccess(text) {
+                    div = document.createElement('div');
+                    div.className = 'debug__item debug__success';
+                    div.textContent = text;
+                    debugArea.appendChild(div);
+                }
+                
+                return {
+                    clear: clearDebug,
+                    addError: addError,
+                    addSuccess: addSuccess,
+                    setError: function(text) {
+                        clearDebug();
+                        addError(text);
+                    },
+                    setSuccess: function(text) {
+                        clearDebug();
+                        addSuccess(text);
+                    },
+                };
+            })();
+            
+
+
+            var DISPLAY_ID = 'display';
+            var WIDTH = 800;
+            var HEIGHT = 600;
+
+            var canvas = document.getElementById(DISPLAY_ID);
+            
+            var simpleRenderer = new SimpleRenderer(canvas, function() {console.log('Complete!')});
+            
+            var codeArea = document.getElementById('code');
+            var exampleSelect = document.getElementById('example');
+            
+            var loadExampleBtn = document.getElementById('btn-load-example');
+            var eraseCodeBtn = document.getElementById('btn-erase-code');
+            var clearCanvasBtn = document.getElementById('btn-clear-canvas');
+            var renderBtn = document.getElementById('btn-render');
+            
+            eraseCodeBtn.addEventListener('click', function(event) {
+                codeArea.value = '<R> = 0;\n<G> = 0;\n<B> = 0;';
+            });
+            
+            clearCanvasBtn.addEventListener('click', function(event) {
+                simpleRenderer.clear();
+            });
+            
+            function render() {
+                try {
+                    simpleRenderer.start(codeArea.value);
+                    debug.setSuccess('Нарисовано!');
+                } catch(e) {
+                    debug.setError('Ошибка: ' + e.toString());
+                    throw e;
+                }
+            }
+            
+            renderBtn.addEventListener('click', function(event) {
+                render();
+            });
+            
+            loadExampleBtn.addEventListener('click', function(event) {
+                if (!EXAMPLES[exampleSelect.value]) {
+                    debug.setError('Не удалось найти код для примера "' + exampleSelect.value + '"');
+                    return;
+                }
+                console.log(1);
+                codeArea.value = EXAMPLES[exampleSelect.value];
+                console.log(2, codeArea, codeArea.value, EXAMPLES[exampleSelect.value]);
+                setTimeout(function(){
+                    console.log(3);
+                    render();
+                    console.log(4);
+                    debug.setSuccess('Загружен пример "' + exampleSelect.value + '"');
+                }, 10);
+            });
+        </script>
+    </body>
+</html>
