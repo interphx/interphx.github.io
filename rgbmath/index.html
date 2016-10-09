@@ -96,7 +96,7 @@
                 'rainbow-plasma': '// Based on this article: http://www.bidouille.org/prog/plasma\n\n// Scale down coordinates to make plasma blobs bigger\nX = X / 64;\nY = Y / 64;\n\n// Build nice weird plasma value from sines of coordinates\nvar v = 0;\nv += sin(X);\nv += sin(Y / 2);\nv += sin((X + Y) / 2);\nv += sin(sqrt(X*X + Y*Y + 1));\nv /= 2;\n\n// Each color is a sine of our plasma value.\n// Coefficient 5 scales everYthing down (to make plasma more interesting)\n// Offsets like 2*PI/3 and 4*PI/3 make it colourful instead of monochrome\n<R> = remap(sin(v * 5 * PI), -1, 1, 0, 1) * 255;\n<G> = remap(sin(v * 5 * PI + 2*PI/3), -1, 1, 0, 1) * 255;\n<B> = remap(sin(v * 5 * PI + 4*PI/3), -1, 1, 0, 1) * 255;',
                 'prime-circuitry': '<R> = (isPrime(X ^ Y) + isPrime((X + 1) ^ (Y + 1))) * 128;\n<G> = (isPrime(X ^ Y) * isPrime((X - 2) ^ (Y - 1))) * 255;\n<B> = 0;',
                 'pattern-in-blue': '<R> = 0;\n<G> = 0;\n<B> = sin(X ^ Y) * cos(X ^ Y) * 255;',
-                'glowing-sineboard': 'var sinX = sin(X / 64);\nvar cosY = cos(Y / 64);\n\n<R> = remap((sinX  * cosY), -1, 1, 0, 1) * 255;\n<G> = 0;\n<B> = remap((sinX  % cosY), -2, 2, 0, 1) * 255;',
+                'glowing-sineboard': 'var sinX = sin(X / 64);\nvar cosY = cos(Y / 64);\n\n<R> = remap((sinX  * cosY), -1, 1, 0, 1) * 255;\n<G> = 0;\n<B> = remap((sinX % cosY), -1, 1, 0, 1) * 255;',
                 'eating-holes': 'var X = (X / 64);\nvar Y = (Y / 64);\n\n<R> = sin((sin(X) * 128) ^ (sin(Y) * 128)) * 255;\n<G> = 0;\n<B> = 0;',
                 'torn-membrane': 'var X = (X / 64);\nvar Y = (Y / 64);\n\n<R> = 0;\n<G> = 0;\n<B> = sin(acos(pow((sin(X + Y) * cos(X - Y)), 2)) + cos(Y*X) * sin(X)) * 255;'
             };
