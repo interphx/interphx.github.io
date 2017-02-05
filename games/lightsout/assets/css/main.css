@@ -1,0 +1,226 @@
+body {
+  overflow-x: : hidden;
+}
+
+#container {
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1, h2 {
+  color: #333;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+/****************************/
+/*       Pages              */
+/****************************/
+
+.screen {
+  width: 100%;
+  position: absolute;
+}
+
+.page-transition-enter {
+  /*left: 600px;*/
+  transform: translateX(50%);
+  opacity: 0;
+  transition: all 0.4s ease-in-out;
+}
+.page-transition-enter.page-transition-enter-active {
+  /*left: 0px;*/
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.page-transition-leave {
+  /*left: 0px;*/
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.4s ease-in-out;
+}
+.page-transition-leave.page-transition-leave-active {
+  /*left: -600px;*/
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+/****************************/
+/*       Buttons            */
+/****************************/
+
+.btn {
+  border: 1px solid #444;
+  color: #444;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 0.4em;
+  outline: none;
+}
+
+.btn-fullwidth {
+  width: 100%;
+}
+
+.btn:hover, .btn:focus {
+  border-color: #000;
+  color: #000;
+  background: #FFF;
+}
+
+.btn-option {
+  border: none;
+}
+
+/****************************/
+/*       Level selection    */
+/****************************/
+
+.levelselect__levels {
+  margin: 0 auto;
+  width: 256px;
+  overflow: auto;
+  margin-bottom: 1em;
+}
+
+.levelselect__level {
+  width: 24%;
+  height: 64px;
+  float: left;
+  margin-top: 6px;
+}
+
+.btn-level {
+  background: url('/assets/img/lamp_off_black.png');
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-weight: bold;
+  text-shadow: 0px 0px 5px rgba(255, 255, 255, 1),
+    0px 0px 4px rgba(255, 255, 255, 1),
+    0px 0px 4px rgba(255, 255, 255, 1),
+    0px 0px 3px rgba(255, 255, 255, 1),
+    0px 0px 3px rgba(255, 255, 255, 1),
+    0px 0px 2px rgba(255, 255, 255, 1),
+    0px 0px 2px rgba(255, 255, 255, 1);
+  cursor: pointer;
+}
+
+.btn-level:hover, .btn-level:focus {
+  outline: none;
+  background-image: url('/assets/img/lamp_off_black_rays.png');
+}
+
+.btn-level.btn-level--solved {
+  background-image: url('/assets/img/lamp_on.png');
+}
+
+/****************************/
+/*       Main menu          */
+/****************************/
+.mainmenu {
+  /*display: inline-block;*/
+}
+
+.mainmenu__logo {
+  cursor: default;
+
+}
+
+.mainmenu__items {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.mainmenu__item-button {
+  width: 100%;
+  border: none;
+  background: none;
+  font-size: 1.6em;
+  margin-bottom: 0.5em;
+  cursor: pointer;
+  color: #444;
+  outline: none;
+}
+
+.mainmenu__item-button:hover, .mainmenu__item-button:focus {
+  color: #000;
+  font-weight: bold;
+}
+
+/****************************/
+/*       Custom game        */
+/****************************/
+
+.customgame__spinner {
+  width: 4em;
+}
+
+.customgame__settings {
+  margin: 0 auto;
+  margin-bottom: 1em;
+}
+
+/****************************/
+/*       Play               */
+/****************************/
+
+
+
+.lights-out-board {
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin: 0 auto;
+  margin-bottom: 1em;
+}
+
+.lights-out-board__row {
+
+}
+
+.lights-out-board__cell {
+  width: 48px;
+  height: 48px;
+  /*border: 1px solid black;*/
+  transition: all 0.3s ease-out;
+  background: url('/assets/img/lamp_off_black.png');
+  background-size: cover;
+  cursor: pointer;
+}
+
+.lights-out-board__cell--on {
+  background-image: url('/assets/img/lamp_on.png');
+}
+
+.lights-out-board__cell--off {
+
+}
+
+/****************************/
+/*       Options            */
+/****************************/
+
+.options__items {
+  width: 60%;
+  margin: 0 auto;
+  margin-bottom: 1em;
+}
+
+/****************************/
+/*       Prompt-options     */
+/****************************/
+
+.prompt-options__items {
+  width: 60%;
+  margin: 0 auto;
+  margin-bottom: 1em;
+}

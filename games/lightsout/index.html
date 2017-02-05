@@ -1,0 +1,33 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Just Another Client-side App</title>
+        <meta name="description" content="">
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+        <link rel="stylesheet" href="assets/css/normalize.min.css">
+        <link rel="stylesheet" href="assets/css/main.css">
+        <script>document.documentElement.className = document.documentElement.className.replace(/\bno\-js\b/i, 'js');</script>
+    </head>
+    <body>
+        <div id="container">
+          <p>Hello world!</p>
+          <p>html5-typescript-amd</p>
+        </div>
+        <script type="text/javascript">
+          var require = {
+            baseUrl: 'assets/js',
+            map: {
+              '*': {
+                'react': 'vendor/react-with-addons.min',
+                'react-dom': 'vendor/react-dom.min'
+              }
+            }
+          };
+        </script>
+        <script type="text/javascript" data-main="app" src="assets/js/vendor/require.min.js"></script>
+    </body>
+</html>
