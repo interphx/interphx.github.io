@@ -673,9 +673,9 @@ define("app", ["require", "exports", "routing"], function (require, exports, rou
     "use strict";
     function preloadImages() {
         var urls = [
-            '/assets/img/lamp_off_black.png',
-            '/assets/img/lamp_off_black_rays.png',
-            '/assets/img/lamp_on.png'
+            'assets/img/lamp_off_black.png',
+            'assets/img/lamp_off_black_rays.png',
+            'assets/img/lamp_on.png'
         ];
         var preloaded = [];
         for (var i = 0; i < urls.length; ++i) {
