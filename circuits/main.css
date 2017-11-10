@@ -14,6 +14,18 @@ html, body {
             user-select: none;
 }
 
+.absolute-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.bg-text {
+    cursor: default;
+    color: #666;
+}
+
 .radial-menu {
     transition: all 0.2s ease-in-out;
     z-index: 9999;
@@ -68,6 +80,17 @@ html, body {
 
 .piece--selected {
     background: #AAF;
+}
+
+.piece--led {
+    border-radius: 50%;
+    width: 50px;
+    padding: 0;
+    border-width: 3px;
+}
+
+.piece--led-enabled {
+    background: red;
 }
 
 .piece__type {
