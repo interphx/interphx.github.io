@@ -1,0 +1,155 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    font-family: Verdana, Tahoma, sans-serif;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.radial-menu {
+    transition: all 0.2s ease-in-out;
+    z-index: 9999;
+}
+
+.radial-menu--visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.radial-menu--hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.radial-menu__item {
+    transition: all 0.2s ease-in-out;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    outline: none;
+    z-index: 9999;
+    background: white;
+    border: 2px solid #333;
+}
+
+.radial-menu__item:hover {
+    cursor: pointer;
+    border: 3px solid black;
+}
+
+.board {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.piece {
+    position: absolute;
+    z-index: 10;
+    border: 1px solid black;
+    width: 80px;
+    height: 50px;
+    text-align: center;
+    padding-top: 8px;
+    background: white;
+    cursor: default;
+}
+
+.piece--selected {
+    background: #AAF;
+}
+
+.piece__type {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+}
+
+.piece__extra {
+    font-size: 10px;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+.piece__extra-def {
+    display: inline-block;
+}
+
+.piece__extra-term {
+    display: inline-block;
+    margin: 0;
+}
+
+.piece__socket {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.hide {
+    display: none;
+}
+
+.niche {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    transition: all 1s ease-in-out;
+}
+
+.niche--inset {
+    position: relative;
+    box-shadow: inset 0 0 5px #000;
+}
+
+.niche--outset {
+    box-shadow: none;
+}
+
+.niche__overlay {
+    overflow: hidden;
+    transition: all 1s ease-in-out;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background-color: #000;
+}
+
+.niche__overlay--inset {
+    opacity: 0.1;
+}
+
+.niche__overlay--outset {
+    opacity: 0;
+    transform: scale(1.0);
+    visibility: hidden;
+}
+
+.niche__container {
+    overflow: hidden;
+    transition: all 1s ease-in-out;
+}
+
+.niche__container--inset {
+    transform: scale(0.97);
+}
+
+.niche__container--outset {
+    transform: scale(1.0);
+}
