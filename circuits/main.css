@@ -14,7 +14,18 @@ html, body {
             user-select: none;
 }
 
-.help {
+.overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    opacity: 0.3;
+    z-index: 999998;
+}
+
+.popup {
     position: fixed;
     left: 50%;
     top: 50%;
@@ -23,6 +34,20 @@ html, body {
     background: white;
     padding: 1em;
     z-index: 999999;
+}
+
+.export__text {
+    min-width: 400px;
+    min-height: 160px;
+}
+
+.import__text {
+    min-width: 400px;
+    min-height: 160px;
+}
+
+.help {
+
 }
 
 .absolute-center {
