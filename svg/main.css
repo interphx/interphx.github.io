@@ -28,16 +28,63 @@
        url('fonts/cutive-mono-v6-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
+@keyframes animated-dots {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: -32;
+    }
+}
+
+.connection__signal-dots {
+    animation-duration: 1s;
+    animation-name: animated-dots;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-timing-function: linear;   
+}
+
+.context-menu {
+    overflow: visible;
+}
+
+.context-menu__background {
+    fill: #FFF;
+}
+
+.context-menu__shadow {
+    fill: #000;
+    opacity: 0.1;
+}
+
+.context-menu__item-background {
+    fill: #FFF;
+}
+
+.context-menu__item:hover .context-menu__item-background {
+    fill: #EEE;
+}
+
+.context-menu__item-text, .context-menu__item-background {
+    cursor: pointer;
+}
+
 html, body {
     padding: 0;
     margin: 0;
     font-size: 16px;
     font-family: "Cutive Mono";
     touch-action: none;
+    background-color: #EEE;
 }
 
 * {
     outline: none;
+}
+
+.main-menu__levels-group-title {
+    text-align: center;
 }
 
 .svg-button {
@@ -186,6 +233,15 @@ html, body {
 
 .gate {
     overflow: visible;
+}
+
+.gate--dragged {
+
+}
+
+.gate--shadow {
+    fill: #000;
+    opacity: 0.18;
 }
 
 .board {
